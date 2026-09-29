@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>H@H Sammen – Interaktiv prototype</title>
+<style>
+:root{--bg:#f4f7f8;--card:#fff;--text:#18323a;--muted:#61737a;--line:#d9e2e5;--accent:#176b73;--accent2:#e4f2f2;--warn:#fff2cc}
+*{box-sizing:border-box} body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
+.app{max-width:1100px;margin:auto;padding:24px}.header{margin-bottom:18px}.header h1{margin:0;font-size:30px}.header p{color:var(--muted)}
+.layout{display:grid;grid-template-columns:230px 1fr;gap:18px}.side,.panel,.card{background:var(--card);border:1px solid var(--line);border-radius:18px}
+.side{padding:15px;height:max-content}.brand{font-weight:700;margin:4px 6px 14px}.brand small{display:block;color:var(--muted);font-weight:400;margin-top:5px}
+.nav{width:100%;border:0;background:transparent;text-align:left;padding:12px;border-radius:12px;font-size:15px;cursor:pointer;margin:3px 0}.nav:hover,.nav.active{background:var(--accent2);color:var(--accent);font-weight:700}
+.panel{padding:22px}.page{display:none}.page.active{display:block}.subtitle{color:var(--muted);margin-top:-8px}.card{padding:16px;margin:12px 0}.row{display:flex;justify-content:space-between;gap:15px;align-items:center;flex-wrap:wrap}
+.badge{border:1px solid var(--line);border-radius:99px;padding:7px 11px}.btn{border:0;border-radius:12px;padding:12px 16px;background:var(--accent);color:white;font-weight:700;cursor:pointer}.btn.secondary{background:var(--accent2);color:var(--text);border:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;background:white}th,td{padding:12px;border-bottom:1px solid var(--line);text-align:left}th{background:#eef3f4}
+.choices{display:flex;gap:10px;flex-wrap:wrap}.choice{border:1px solid var(--line);background:white;padding:12px;border-radius:12px;cursor:pointer}.choice.selected{outline:3px solid var(--accent);background:var(--accent2)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.notice{padding:13px;border-radius:12px;background:var(--accent2);margin-top:12px}.warn{background:var(--warn)}
+.steps{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.step{border:1px solid var(--line);border-radius:99px;padding:8px 11px;background:white}
+.guide{cursor:pointer}.guide:hover{background:var(--accent2)}
+footer{margin-top:20px;color:var(--muted);font-size:13px}
+@media(max-width:720px){.layout{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.side{display:flex;gap:6px;overflow:auto}.brand{display:none}.nav{min-width:160px}}
+</style>
+</head>
+<body>
+<div class="app">
+ <div class="header"><h1>H@H Sammen</h1><p>Interaktiv prototype – pårørende, rolleafklaring og klinisk lederskab i hjemmeindlæggelse</p></div>
+ <div class="layout">
+  <aside class="side">
+   <div class="brand">Jens Hansens H@H-forløb<small>Patient · Pårørende · Sygeplejerske</small></div>
+   <button class="nav active" data-page="home">🏠 Mit H@H-forløb</button>
+   <button class="nav" data-page="roles">👥 Hvem gør hvad?</button>
+   <button class="nav" data-page="wellbeing">💬 Min tryghed</button>
+   <button class="nav" data-page="guidance">📚 Hjælp & vejledning</button>
+   <button class="nav" data-page="nurse">🩺 Klinisk overblik</button>
+  </aside>
+  <main class="panel">
+   <section id="home" class="page active">
+    <h2>Mit H@H-forløb</h2><p class="subtitle">Fælles overblik for patient og pårørende</p>
+    <div class="card row"><div><b>Jens Hansen</b><br><span class="subtitle">Hjemmeindlagt · dag 2</span></div><span class="badge">● Stabilt forløb</span></div>
+    <h3>Dagens plan</h3>
+    <div class="card"><b>08:00</b> · Temperatur og observation</div>
+    <div class="card"><b>12:00</b> · Digital samtale med sygeplejerske</div>
+    <div class="card"><b>16:00</b> · Sygeplejerskebesøg</div>
+    <button id="contact" class="btn">Kontakt H@H-teamet</button><div id="contactMsg"></div>
+   </section>
+
+   <section id="roles" class="page">
+    <h2>Hvem gør hvad?</h2><p class="subtitle">Tydelig rolleafklaring mellem pårørende og sundhedsprofessionelle</p>
+    <div style="overflow:auto"><table><thead><tr><th>Opgave</th><th>Pårørende</th><th>Sygeplejerske</th></tr></thead><tbody>
+    <tr><td>Mad og drikke</td><td>✓</td><td>Ved behov</td></tr>
+    <tr><td>Observere ændringer</td><td>✓ og kontakte teamet</td><td>✓ klinisk vurdering</td></tr>
+    <tr><td>Medicin/behandling</td><td>Kun efter konkret aftale</td><td>Ansvar efter behandlingsplan</td></tr>
+    <tr><td>Ændre behandlingsplan</td><td>—</td><td>✓ sundhedsfagligt ansvar</td></tr>
+    </tbody></table></div>
+    <div class="card"><b>Føler du dig tryg ved de aftalte opgaver?</b><div class="choices" style="margin-top:12px">
+      <button class="choice role" data-value="Tryg">😊 Ja</button><button class="choice role" data-value="Delvist tryg">😐 Delvist</button><button class="choice role" data-value="Utryg">😟 Nej</button>
+    </div><div id="roleMsg" class="subtitle" style="margin-top:12px"></div></div>
+   </section>
+
+   <section id="wellbeing" class="page">
+    <h2>Hvordan har du det som pårørende?</h2><p class="subtitle">Pårørende er ikke kun en ressource – deres behov for støtte skal også vurderes.</p>
+    <div class="card"><div class="choices">
+      <button class="choice wellbeing" data-value="Tryg">😊 Jeg føler mig tryg</button><button class="choice wellbeing" data-value="Usikker">😐 Jeg er usikker</button><button class="choice wellbeing" data-value="Belastet">😟 Jeg føler mig belastet</button>
+    </div>
+    <p><b>Har du brug for kontakt med sygeplejersken?</b></p>
+    <select id="need" style="padding:12px;border:1px solid var(--line);border-radius:10px;font-size:16px"><option value="">Vælg…</option><option>Nej</option><option>Ja</option></select>
+    <br><br><button id="sendStatus" class="btn">Send status</button><div id="statusMsg"></div></div>
+   </section>
+
+   <section id="guidance" class="page">
+    <h2>Hjælp & vejledning</h2><p class="subtitle">Kort og forståelig information tilpasset den pårørendes behov.</p>
+    <div class="grid">
+     <div class="card guide" data-text="Observer patientens almenbefindende efter den plan, I har aftalt med H@H-teamet. Kontakt teamet ved bekymring."><b>👀 Hvad skal jeg holde øje med?</b><p class="subtitle">Observation og reaktion</p></div>
+     <div class="card guide" data-text="Din rolle aftales sammen med sygeplejersken. Du skal ikke overtage sundhedsfagligt ansvar, som ikke er aftalt."><b>👥 Min rolle som pårørende</b><p class="subtitle">Ansvar og grænser</p></div>
+     <div class="card guide" data-text="Kontakt H@H-teamet ved usikkerhed, belastning eller ændringer i patientens tilstand efter de aftalte retningslinjer."><b>📞 Hvornår kontakter jeg teamet?</b><p class="subtitle">Tryg adgang til hjælp</p></div>
+     <div class="card guide" data-text="Sygeplejersken kan demonstrere en aftalt opgave, lade dig afprøve den under vejledning og give feedback. Det kan styrke mestring og self-efficacy."><b>🎓 Lær en aftalt opgave</b><p class="subtitle">Demonstration · afprøvning · feedback</p></div>
+    </div><div id="guideText" class="notice">Klik på et emne ovenfor.</div>
+   </section>
+
+   <section id="nurse" class="page">
+    <h2>Klinisk overblik</h2><p class="subtitle">Sygeplejerskens kliniske lederskab: vurder · prioriter · koordinér · kommuniker · følg op</p>
+    <div class="grid">
+      <div class="card"><span class="subtitle">Patientstatus</span><h3>● Stabil</h3></div>
+      <div class="card"><span class="subtitle">Pårørendes tryghed</span><h3 id="nurseComfort">Ikke registreret</h3></div>
+      <div class="card"><span class="subtitle">Rollefordeling</span><h3>✓ Gennemgået</h3></div>
+      <div class="card"><span class="subtitle">Behov for opfølgning</span><h3 id="followup">Afventer vurdering</h3></div>
+    </div>
+    <div class="card"><b>Klinisk lederskab i appen</b><div class="steps" style="margin-top:12px"><span class="step">1. Indsamle data</span>→<span class="step">2. Vurdere</span>→<span class="step">3. Prioritere</span>→<span class="step">4. Koordinere</span>→<span class="step">5. Følge op</span></div></div>
+    <button id="followBtn" class="btn">Registrér opfølgning med pårørende</button><div id="followMsg"></div>
+   </section>
+  </main>
+ </div>
+ <footer>Undervisningsprototype til H@H-projekt · Gruppe 5 · Københavns Professionshøjskole</footer>
+</div>
+<script>
+const navs=document.querySelectorAll('.nav'),pages=document.querySelectorAll('.page');
+navs.forEach(b=>b.onclick=()=>{navs.forEach(x=>x.classList.remove('active'));pages.forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(b.dataset.page).classList.add('active')});
+document.getElementById('contact').onclick=()=>document.getElementById('contactMsg').innerHTML='<div class="notice">Kontaktønske registreret. H@H-teamet kan følge op.</div>';
+let comfort='', wellbeing='';
+document.querySelectorAll('.role').forEach(b=>b.onclick=()=>{document.querySelectorAll('.role').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');comfort=b.dataset.value;document.getElementById('roleMsg').textContent=comfort==='Tryg'?'Rollefordelingen opleves tydelig.':'Sygeplejersken bør følge op og afklare de opgaver, der skaber usikkerhed.';document.getElementById('nurseComfort').textContent=comfort});
+document.querySelectorAll('.wellbeing').forEach(b=>b.onclick=()=>{document.querySelectorAll('.wellbeing').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');wellbeing=b.dataset.value});
+document.getElementById('sendStatus').onclick=()=>{const need=document.getElementById('need').value;if(!wellbeing||!need){document.getElementById('statusMsg').innerHTML='<div class="notice warn">Vælg både hvordan du har det og om du ønsker kontakt.</div>';return}const follow=(wellbeing!=='Tryg'||need==='Ja');document.getElementById('nurseComfort').textContent=wellbeing;document.getElementById('followup').textContent=follow?'⚠️ Opfølgning anbefales':'✓ Ingen ekstra opfølgning nu';document.getElementById('statusMsg').innerHTML='<div class="notice">'+(follow?'Status registreret. Sygeplejersken får synligt behov for opfølgning.':'Status registreret.')+'</div>'};
+document.querySelectorAll('.guide').forEach(g=>g.onclick=()=>document.getElementById('guideText').textContent=g.dataset.text);
+document.getElementById('followBtn').onclick=()=>{document.getElementById('followup').textContent='✓ Opfølgning registreret';document.getElementById('followMsg').innerHTML='<div class="notice">Opfølgning registreret – information omsættes til handling og kontinuitet.</div>'};
+</script>
+</body></html>
